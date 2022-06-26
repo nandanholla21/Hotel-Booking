@@ -57,11 +57,12 @@ const login = new mongoose.model("Login",HotelSchema);
 const firstroom = new mongoose.model("Roomone",roomSchema);
 const secondroom = new mongoose.model("Roomtwo",roomSchema);
 const thirdroom = new mongoose.model("Roomthree",roomSchema);
+const fourthroom = new mongoose.model("Roomfour",roomSchema);
 const fifthroom = new mongoose.model("RoomFive",roomSchema);
 
 //end of models
 
-
+var boat_count = 10;
 app.get("/",function(req,res){  
     res.sendFile(__dirname+"/signup.html");
 });
@@ -155,7 +156,8 @@ app.post("/newroute",function(req,res){
         res.sendFile(__dirname+"/hotel3.html");
     }
     else if(req.body.input === "Paddle HouseBoats 1"){
-        res.sendFile(__dirname+"/hotel4.html");
+        //res.sendFile(__dirname+"/hotel4.html");
+        res.render("hotel4",{bc:boat_count});
     }
     else{
         res.sendFile(__dirname+"/hotel5.html");
@@ -210,7 +212,7 @@ app.post("/checkrooms",function(req,res){
     
                     if(flag == true){
                         //fi.save();
-                        res.render("payment",{});
+                        res.render("payment",{index:1});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -262,7 +264,7 @@ app.post("/checkrooms",function(req,res){
     
                     if(flag == true){
                         //se.save();
-                        res.render("payment",{});
+                        res.render("payment",{index:2});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -274,7 +276,8 @@ app.post("/checkrooms",function(req,res){
     }
     //third hotel
     else if(req.body.index == 3){
-        const th = new firstroom({
+        console.log(req.body.index);
+        const th = new thirdroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -314,7 +317,7 @@ app.post("/checkrooms",function(req,res){
     
                     if(flag == true){
                         //th.save();
-                        res.render("payment",{});
+                        res.render("payment",{index:3});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -324,8 +327,54 @@ app.post("/checkrooms",function(req,res){
             }
         });
     }
+    else if(req.body.index == 4){
+        
+        if(boat_count == 0){
+            res.render("success",{result:"No Boats are available!"});
+        }
+        else{
+            const xy = new fourthroom({
+                checkindate:req.body.checkin,
+                checkoutdate:req.body.checkout,
+                adults:req.body.adults,
+                children:req.body.children,
+                infants:req.body.infants
+            });
+            let current_check_in = new Date(req.body.checkin); 
+            let current_check_out = new Date(req.body.checkout);
+            if(current_check_out < current_check_in){
+                res.render("success",{result:"Enter Valid Dates"});
+            }
+            else{
+                boat_count--;
+                xy.save();
+                fourthroom.find({},function(err,records){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        // let v = new Date();
+                        // let year = v.getFullYear();
+                        // let month = v.getMonth()+1;
+                        // let day = v.getDate();
+                        //let today = year+"-"+month+"-"+day;
+                        //console.log(today  == current_check_out);
+                        
+                        records.forEach(function(item){
+                            let array = item.checkoutdate.split("-");
+                            console.log(array);
+                        });
+                    }
+                });
+
+            }
+
+
+        }
+
+    }
     else if(req.body.index == 5){
-        const ab = new firstroom({
+        const ab = new fifthroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -365,7 +414,7 @@ app.post("/checkrooms",function(req,res){
     
                     if(flag == true){
                         //ab.save();
-                        res.render("payment",{});
+                        res.render("payment",{index:5});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -377,45 +426,45 @@ app.post("/checkrooms",function(req,res){
     }
 });
 
-//payment process
-var instance = new Razorpay({
-    key_id: 'rzp_test_I74k0etx2CKo8P',
-    key_secret: 'nRT2dL0PmzmbAYUPdkDH12Ut',
-  });
+// //payment process
+// var instance = new Razorpay({
+//     key_id: 'rzp_test_I74k0etx2CKo8P',
+//     key_secret: 'nRT2dL0PmzmbAYUPdkDH12Ut',
+//   });
   
-  app.get("/",function(req,res){
-      res.render("standard",{});
-  });
-  app.post("/create/orderId",function(req,res){
+//   app.get("/",function(req,res){
+//       res.render("standard",{});
+//   });
+//   app.post("/create/orderId",function(req,res){
   
-      var options = {
-          amount: 1000,  // amount in the smallest currency unit
-          currency: "INR",
-          receipt: "order_rcptid_11"
-        };
-        instance.orders.create(options, function(err, order) {
-          //console.log(order);
-          res.send({orderId: order.id});
-            //res.send(order);
-        });
-  });
-  app.post("/api/payment/verify",(req,res)=>{
+//       var options = {
+//           amount: 1000,  // amount in the smallest currency unit
+//           currency: "INR",
+//           receipt: "order_rcptid_11"
+//         };
+//         instance.orders.create(options, function(err, order) {
+//           //console.log(order);
+//           res.send({orderId: order.id});
+//             //res.send(order);
+//         });
+//   });
+//   app.post("/api/payment/verify",(req,res)=>{
 
-      let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
+//       let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
      
-       var crypto = require("crypto");
-       var expectedSignature = crypto.createHmac('sha256', 'nRT2dL0PmzmbAYUPdkDH12Ut')
-                                       .update(body.toString())
-                                       .digest('hex');
-                                       console.log("sig received " ,req.body.response.razorpay_signature);
-                                       console.log("sig generated " ,expectedSignature);
-       var response = {"signatureIsValid":"false"}
-       if(expectedSignature === req.body.response.razorpay_signature)
-        response={"signatureIsValid":"true"}
-           //res.send(response);
-       });
+//        var crypto = require("crypto");
+//        var expectedSignature = crypto.createHmac('sha256', 'nRT2dL0PmzmbAYUPdkDH12Ut')
+//                                        .update(body.toString())
+//                                        .digest('hex');
+//                                        console.log("sig received " ,req.body.response.razorpay_signature);
+//                                        console.log("sig generated " ,expectedSignature);
+//        var response = {"signatureIsValid":"false"}
+//        if(expectedSignature === req.body.response.razorpay_signature)
+//         response={"signatureIsValid":"true"}
+//            //res.send(response);
+//        });
 
-       //end of payment process
+//        //end of payment process
 
 app.listen(3000,function(){
     console.log("App listening on port 3000.");

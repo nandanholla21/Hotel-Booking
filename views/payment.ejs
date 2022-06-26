@@ -16,19 +16,40 @@
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
           <h1 class="display-4">Rooms Available</h1>
-          <button  class="btn btn-primary" id="rzp-button1">Click To Pay</button>
+
+          <% if(index == 1) {  %>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbW5FyA9BzTcK" async> </script> </form>
+          <% } %>
+            <!-- button for hotel 2 -->
+          <% if(index == 2) {  %>
+            <form ><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbZ4zJBmcbOKm" async> </script> </form>
+          <% } %>
+            <!-- button for hotel 3 -->
+            <% if(index == 3) {  %>
+            <form ><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbbBCXjWnx4Fx" async> </script> </form>
+          <% } %>
+            <!-- button for hotel 4 -->
+          <% if(index == 4) {  %>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Jlbcvg6UKYzYh4" async> </script> </form>
+          <% } %>
+          <!-- button for hotel 5 -->
+          <% if(index == 5) {  %>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbevVbphv6QA0" async> </script> </form>
+          <% } %>
+          <!-- <form>
+            <script src="https://checkout.razorpay.com/v1/checkout.js" data-payment_button_id="pl_JjpFufmjKMMgnD" async></script>
+          </form> -->
+          <!-- <button  class="btn btn-primary" id="rzp-button1">Click To Pay</button> -->
         </div>
     </div>
 </body>
-<form>
-  <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
-</form>
+<!-- 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     var orderId ;
 $(document).ready(function(){
-    var settings = {
+  var settings = {
   "url": "/create/orderId",
   "method": "POST",
   "timeout": 0,
@@ -36,7 +57,7 @@ $(document).ready(function(){
     "Content-Type": "application/json"
   },
   "data": JSON.stringify({
-    "amount": "50000"   //dynamic changes
+    "amount": "1000"   //dynamic changes
   }),
 };
 $.ajax(settings).done(function (response) {
@@ -75,7 +96,7 @@ $.ajax(settings).done(function (response) {
 });
     },
 "theme": {
-        "color": "#99cc33"
+        "color": "#16a34a"
     }
 };
 var rzp1 = new Razorpay(options);
@@ -92,5 +113,5 @@ rzp1.on('payment.failed', function (response){
 rzp1.open();
     e.preventDefault();
 }
-</script>
+</script> -->
 </html>
