@@ -62,11 +62,12 @@ const fifthroom = new mongoose.model("RoomFive",roomSchema);
 
 //end of models
 
-var boat_count = 10;
 app.get("/",function(req,res){  
-    res.sendFile(__dirname+"/signup.html");
+    res.sendFile(__dirname+"/home.html");
+    //res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
+    
     res.sendFile(__dirname+"/login.html");
 });
 
@@ -157,7 +158,16 @@ app.post("/newroute",function(req,res){
     }
     else if(req.body.input === "Paddle HouseBoats 1"){
         //res.sendFile(__dirname+"/hotel4.html");
-        res.render("hotel4",{bc:boat_count});
+            let count = 0;        
+            fourthroom.find({},function(err,records){
+            if(err){
+                console.log("Error detected !");
+            }
+            else{
+                count = 10-records.length;
+                res.render("hotel4",{bc:count});
+            }
+        });
     }
     else{
         res.sendFile(__dirname+"/hotel5.html");
@@ -165,12 +175,6 @@ app.post("/newroute",function(req,res){
 });
 
 app.post("/checkrooms",function(req,res){
-    
-    // let sysdate = new Date().toLocaleDateString().split("/");
-    // console.log(sysdate);
-    console.log(req.body.price);
-
-    
     if(req.body.index == 1){
         const fi = new firstroom({
             checkindate:req.body.checkin,
@@ -178,6 +182,34 @@ app.post("/checkrooms",function(req,res){
             adults:req.body.adults,
             children:req.body.children,
             infants:req.body.infants
+        });
+        firstroom.find({},function(err,records){
+            records.forEach(function(item){
+                var v = new Date();
+                var year = v.getFullYear();
+                var month = v.getMonth()+1;
+                if(month<10){
+                    month='0'+month;
+                }
+                let day = v.getDate();
+                if(day <10){
+                    day='0'+day;
+                }
+                var ff=0;
+                var check_out_param;
+                let array = item.checkoutdate.split("-");
+                if( array[0] == year && array[1] == month && array[2] == day){
+                    check_out_param = item.checkoutdate;
+                    firstroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                        if(err){
+                            console.log("Error detected");
+                        }
+                        else{
+                            console.log("Deleted successfully");
+                        }
+                    });
+                }
+            }); 
         });
         firstroom.find({},function(err,records){
 
@@ -232,6 +264,34 @@ app.post("/checkrooms",function(req,res){
             infants:req.body.infants
         });
         secondroom.find({},function(err,records){
+            records.forEach(function(item){
+                var v = new Date();
+                var year = v.getFullYear();
+                var month = v.getMonth()+1;
+                if(month<10){
+                    month='0'+month;
+                }
+                let day = v.getDate();
+                if(day <10){
+                    day='0'+day;
+                }
+                var ff=0;
+                var check_out_param;
+                let array = item.checkoutdate.split("-");
+                if( array[0] == year && array[1] == month && array[2] == day){
+                    check_out_param = item.checkoutdate;
+                    secondroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                        if(err){
+                            console.log("Error detected");
+                        }
+                        else{
+                            console.log("Deleted successfully");
+                        }
+                    });
+                }
+            }); 
+        });
+        secondroom.find({},function(err,records){
 
             let current_check_in = new Date(req.body.checkin); 
             let current_check_out = new Date(req.body.checkout);
@@ -284,6 +344,35 @@ app.post("/checkrooms",function(req,res){
             children:req.body.children,
             infants:req.body.infants
         });
+        //delete records of checkout == today
+        thirdroom.find({},function(err,records){
+            records.forEach(function(item){
+                var v = new Date();
+                var year = v.getFullYear();
+                var month = v.getMonth()+1;
+                if(month<10){
+                    month='0'+month;
+                }
+                let day = v.getDate();
+                if(day <10){
+                    day='0'+day;
+                }
+                var ff=0;
+                var check_out_param;
+                let array = item.checkoutdate.split("-");
+                if( array[0] == year && array[1] == month && array[2] == day){
+                    check_out_param = item.checkoutdate;
+                    thirdroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                        if(err){
+                            console.log("Error detected");
+                        }
+                        else{
+                            console.log("Deleted successfully");
+                        }
+                    });
+                }
+            }); 
+        });
         thirdroom.find({},function(err,records){
 
             let current_check_in = new Date(req.body.checkin); 
@@ -328,49 +417,67 @@ app.post("/checkrooms",function(req,res){
         });
     }
     else if(req.body.index == 4){
-        
-        if(boat_count == 0){
-            res.render("success",{result:"No Boats are available!"});
-        }
-        else{
-            const xy = new fourthroom({
-                checkindate:req.body.checkin,
-                checkoutdate:req.body.checkout,
-                adults:req.body.adults,
-                children:req.body.children,
-                infants:req.body.infants
-            });
-            let current_check_in = new Date(req.body.checkin); 
-            let current_check_out = new Date(req.body.checkout);
-            if(current_check_out < current_check_in){
-                res.render("success",{result:"Enter Valid Dates"});
-            }
+        const xy = new fourthroom({
+            checkindate:req.body.checkin,
+            checkoutdate:req.body.checkout,
+            adults:req.body.adults,
+            children:req.body.children,
+            infants:req.body.infants
+        });
+        var count = 0;
+
+        //wipe out data if checkout == today's date
+        fourthroom.find({},function(err,records){
+            records.forEach(function(item){
+                var v = new Date();
+                var year = v.getFullYear();
+                var month = v.getMonth()+1;
+                if(month<10){
+                    month='0'+month;
+                }
+                let day = v.getDate();
+                if(day <10){
+                    day='0'+day;
+                }
+                var ff=0;
+                var check_out_param;
+                let array = item.checkoutdate.split("-");
+                if( array[0] == year && array[1] == month && array[2] == day){
+                    check_out_param = item.checkoutdate;
+                    fourthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                        if(err){
+                            console.log("Error detected");
+                        }
+                        else{
+                            console.log("Deleted successfully");
+                        }
+                    });
+                }
+            }); 
+        });
+
+        //insert new records
+
+        fourthroom.find({},function(err,records){
+
+            if(err){console.log("Error");}
             else{
-                boat_count--;
-                xy.save();
-                fourthroom.find({},function(err,records){
-                    if(err){
-                        console.log("Error detected");
+                if(records.length == 10){
+                    res.render("success",{result:"No Boats are available!"});
+                }
+                else{
+                    let current_check_in = new Date(req.body.checkin); 
+                    let current_check_out = new Date(req.body.checkout);
+                    if(current_check_out < current_check_in){
+                        res.render("success",{result:"Enter Valid Dates"});
                     }
-                    else{
-                        // let v = new Date();
-                        // let year = v.getFullYear();
-                        // let month = v.getMonth()+1;
-                        // let day = v.getDate();
-                        //let today = year+"-"+month+"-"+day;
-                        //console.log(today  == current_check_out);
-                        
-                        records.forEach(function(item){
-                            let array = item.checkoutdate.split("-");
-                            console.log(array);
-                        });
+                    else{     
+                        xy.save();
+                        res.render("payment",{index:4});
                     }
-                });
-
+                }
             }
-
-
-        }
+        });
 
     }
     else if(req.body.index == 5){
@@ -380,6 +487,34 @@ app.post("/checkrooms",function(req,res){
             adults:req.body.adults,
             children:req.body.children,
             infants:req.body.infants
+        });
+        fifthroom.find({},function(err,records){
+            records.forEach(function(item){
+                var v = new Date();
+                var year = v.getFullYear();
+                var month = v.getMonth()+1;
+                if(month<10){
+                    month='0'+month;
+                }
+                let day = v.getDate();
+                if(day <10){
+                    day='0'+day;
+                }
+                var ff=0;
+                var check_out_param;
+                let array = item.checkoutdate.split("-");
+                if( array[0] == year && array[1] == month && array[2] == day){
+                    check_out_param = item.checkoutdate;
+                    fifthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                        if(err){
+                            console.log("Error detected");
+                        }
+                        else{
+                            console.log("Deleted successfully");
+                        }
+                    });
+                }
+            }); 
         });
         fifthroom.find({},function(err,records){
 
