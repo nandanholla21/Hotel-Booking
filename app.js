@@ -221,7 +221,7 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out < current_check_in){
+                if(current_check_out <= current_check_in){
                     res.render("success",{result:"Enter Valid Dates"});
                 }
                 else{
@@ -253,7 +253,6 @@ app.post("/checkrooms",function(req,res){
                 }
             }
         });
-
     }
     else if(req.body.index == 2){
         const se = new secondroom({
@@ -321,7 +320,6 @@ app.post("/checkrooms",function(req,res){
                                 flag=false;
                         }
                     });
-    
                     if(flag == true){
                         //se.save();
                         res.render("payment",{index:2});
@@ -383,7 +381,7 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out < current_check_in){
+                if(current_check_out <= current_check_in){
                     res.render("success",{result:"Enter Valid Dates"});
                 }
                 else{
@@ -468,7 +466,7 @@ app.post("/checkrooms",function(req,res){
                 else{
                     let current_check_in = new Date(req.body.checkin); 
                     let current_check_out = new Date(req.body.checkout);
-                    if(current_check_out < current_check_in){
+                    if(current_check_out <= current_check_in){
                         res.render("success",{result:"Enter Valid Dates"});
                     }
                     else{     
@@ -478,7 +476,6 @@ app.post("/checkrooms",function(req,res){
                 }
             }
         });
-
     }
     else if(req.body.index == 5){
         const ab = new fifthroom({
@@ -560,47 +557,6 @@ app.post("/checkrooms",function(req,res){
         });
     }
 });
-
-// //payment process
-// var instance = new Razorpay({
-//     key_id: 'rzp_test_I74k0etx2CKo8P',
-//     key_secret: 'nRT2dL0PmzmbAYUPdkDH12Ut',
-//   });
-  
-//   app.get("/",function(req,res){
-//       res.render("standard",{});
-//   });
-//   app.post("/create/orderId",function(req,res){
-  
-//       var options = {
-//           amount: 1000,  // amount in the smallest currency unit
-//           currency: "INR",
-//           receipt: "order_rcptid_11"
-//         };
-//         instance.orders.create(options, function(err, order) {
-//           //console.log(order);
-//           res.send({orderId: order.id});
-//             //res.send(order);
-//         });
-//   });
-//   app.post("/api/payment/verify",(req,res)=>{
-
-//       let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
-     
-//        var crypto = require("crypto");
-//        var expectedSignature = crypto.createHmac('sha256', 'nRT2dL0PmzmbAYUPdkDH12Ut')
-//                                        .update(body.toString())
-//                                        .digest('hex');
-//                                        console.log("sig received " ,req.body.response.razorpay_signature);
-//                                        console.log("sig generated " ,expectedSignature);
-//        var response = {"signatureIsValid":"false"}
-//        if(expectedSignature === req.body.response.razorpay_signature)
-//         response={"signatureIsValid":"true"}
-//            //res.send(response);
-//        });
-
-//        //end of payment process
-
 app.listen(3000,function(){
     console.log("App listening on port 3000.");
 });

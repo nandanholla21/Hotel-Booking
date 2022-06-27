@@ -126,8 +126,8 @@
               <input name="price" value="" style="margin-top: 2%;font-weight: bold;font-size: 27px; text-align: center;" disabled placeholder="₹6,586">
               <table class="check">
                 <tr>
-                  <td><input id="init" type="date" name="checkin" value=""></td>
-                  <td><input id="exi" type="date" name="checkout" value=""></td>
+                  <td><input id="init" type="date" name="checkin" value="" min=""></td>
+                  <td><input id="exi" type="date" name="checkout" value="" min=""></td>
                 </tr>
                 <tr>
                   <p style="margin-top:10%;"></p>
@@ -253,6 +253,7 @@ Guest has access to single room luxurious cottage with an amazing view of Pawana
   }
   let s = year+"-"+month+"-"+day;
   document.getElementById("init").value = s;
+  document.getElementById("init").min = s;
   const tomorrow = new Date(v);
   tomorrow.setDate(tomorrow.getDate() + 1);
   let y = tomorrow.getFullYear();
@@ -266,4 +267,5 @@ Guest has access to single room luxurious cottage with an amazing view of Pawana
   }
   let ne = y+"-"+m+"-"+d;
   document.getElementById("exi").value = ne;
+  document.getElementById("exi").min = ne;
 </script>
