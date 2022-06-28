@@ -47,6 +47,10 @@ const roomSchema = new mongoose.Schema({
     infants:{
         type:Number,
         required:[true,"Number of infants required"]
+    },
+    num:{
+        type:Number,
+        required:[true,"Hotel number required"]
     }
 });
 
@@ -181,7 +185,8 @@ app.post("/checkrooms",function(req,res){
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
             children:req.body.children,
-            infants:req.body.infants
+            infants:req.body.infants,
+            num:1
         });
         firstroom.find({},function(err,records){
             records.forEach(function(item){
@@ -244,7 +249,8 @@ app.post("/checkrooms",function(req,res){
     
                     if(flag == true){
                         //fi.save();
-                        res.render("payment",{index:1});
+                        res.render("booking",{index:1,data:JSON.stringify(fi)});
+                        //res.render("payment",{index:1});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -260,7 +266,8 @@ app.post("/checkrooms",function(req,res){
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
             children:req.body.children,
-            infants:req.body.infants
+            infants:req.body.infants,
+            num:2
         });
         secondroom.find({},function(err,records){
             records.forEach(function(item){
@@ -340,7 +347,8 @@ app.post("/checkrooms",function(req,res){
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
             children:req.body.children,
-            infants:req.body.infants
+            infants:req.body.infants,
+            num:3
         });
         //delete records of checkout == today
         thirdroom.find({},function(err,records){
@@ -420,7 +428,8 @@ app.post("/checkrooms",function(req,res){
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
             children:req.body.children,
-            infants:req.body.infants
+            infants:req.body.infants,
+            num:4
         });
         var count = 0;
 
@@ -483,7 +492,8 @@ app.post("/checkrooms",function(req,res){
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
             children:req.body.children,
-            infants:req.body.infants
+            infants:req.body.infants,
+            num:5
         });
         fifthroom.find({},function(err,records){
             records.forEach(function(item){
@@ -555,6 +565,50 @@ app.post("/checkrooms",function(req,res){
                 }
             }
         });
+    }
+});
+app.post("/confirmbooking",function(req,res){
+    let obj = req.body.number;
+    obj = JSON.parse(obj);
+    if(obj.num === 1){
+        firstroom.insertMany([obj],function(err,respone){
+            if(err){
+                console.log("Error");
+            }
+        });
+        res.render("payment",{index:1});
+    }
+    else if(obj.num == 2){
+        secondroom.insertMany([obj],function(err,respone){
+            if(err){
+                console.log("Error");
+            }
+        });
+        res.render("payment",{index:2});
+    }
+    else if(obj.num == 3){
+        thirdroom.insertMany([obj],function(err,respone){
+            if(err){
+                console.log("Error");
+            }
+        });
+        res.render("payment",{index:3});
+    }
+    else if(obj.num == 4){
+        fourthroom.insertMany([obj],function(err,respone){
+            if(err){
+                console.log("Error");
+            }
+        });
+        res.render("payment",{index:4});
+    }
+    else{
+        fifthroom.insertMany([obj],function(err,respone){
+            if(err){
+                console.log("Error");
+            }
+        });
+        res.render("payment",{index:5});
     }
 });
 app.listen(3000,function(){

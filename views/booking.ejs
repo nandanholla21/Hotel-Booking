@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel-Booking | Payment</title>
+    <link rel="icon"  href="img/Hotel-Booking.jpg">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="icon" href="public/css/favicon.ico">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">Rooms Available</h1>
+          <% if(index == 1) { %>
+            <form method="POST" action="/confirmbooking">
+                  <button class="btn btn-primary"   type="submit" name="number" value="<%=data %>">Confirm Booking</button>
+            </form>
+          <% } %>
+          <% if(index == 2) { %>
+            <form method="POST" action="/confirmbooking">
+                  <button class="btn btn-primary" type="submit" name="number" value="2">Confirm Booking</button>
+            </form>
+          <% } %>
+          <% if(index == 3) { %>
+            <form method="POST" action="/confirmbooking">
+                  <button class="btn btn-primary" type="submit" name="number" value="3">Confirm Booking</button>
+            </form>
+          <% } %>
+          <% if(index == 4) { %>
+            <form method="POST" action="/confirmbooking">
+                  <button class="btn btn-primary" type="submit" name="number" value="4">Confirm Booking</button>
+            </form>
+          <% } %>
+          <% if(index == 5) { %>
+            <form method="POST" action="/confirmbooking">
+                  <button class="btn btn-primary" type="submit" name="number" value="5">Confirm Booking</button>
+            </form>
+          <% } %>
+        </div>
+    </div>
+</body>
+</html>
+<script type = "text/javascript" >  
+  function preventBack() { window.history.forward(); }  
+  setTimeout("preventBack()", 0);  
+  window.onunload = function () { null };  
+</script>
