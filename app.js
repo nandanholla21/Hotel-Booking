@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const ejs = require("ejs");
 const Razorpay = require("Razorpay");
 const app = express();
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 app.set("view engine","ejs");
 app.use(bodyparser.urlencoded({extended:true}));
@@ -67,8 +69,8 @@ const fifthroom = new mongoose.model("RoomFive",roomSchema);
 //end of models
 
 app.get("/",function(req,res){  
-    res.sendFile(__dirname+"/home.html");
-    //res.sendFile(__dirname+"/signup.html");
+    //res.sendFile(__dirname+"/home.html");
+    res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
     
@@ -80,67 +82,84 @@ app.post("/abc",function(req,res){
 });
 
 app.post("/login",function(req,res){
-    login.find({email:req.body.email},function(err,result){
+    login.findOne({email:req.body.email},function(err,result){
         if(err){
             console.log("Error");
         }
         else{
-            if(result.length === 0){
+            if(result === null){
                 res.render("success",{result:"Email-ID not found"});
-                //res.sendFile(__dirname+"/login.html");
             }
             else{
-                login.find({password:req.body.password},function(err,fina){
-                    if(err){
-                        console.log("Error");
-                    }
-                    else{
-                        if(fina.length === 0){
-                            res.render("success",{result:"Password Not Found"});
-                            //res.sendFile(__dirname+"/login.html");
-                        }
-                        else{
+                if(result){
+                    bcrypt.compare(req.body.password,result.password,function(err,callbac){
+                        if(callbac === true){
                             res.sendFile(__dirname+"/home.html");
                         }
-                    }
-                });
+                        else{
+                            res.render("success",{result:"Password Not Found"});
+                        }
+                    });
+                }
             }
         }
     });
 });
 app.post("/signup",function(req,res){
-    const user = new login({
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password
-    });
-    login.find({email:req.body.email},function(err,result){
-        if(err){
-            console.log("Error detected!");
-        }
-        else{
-            if(result.length != 0){
-                res.render("success",{result:"Email-ID already registered"});
-                /*res.sendFile(__dirname+"/signup.html");*/
+
+    bcrypt.hash(req.body.password,saltRounds,function(err,hash){
+        const user = new login({
+            name:req.body.name,
+            email:req.body.email,
+            password:hash
+        });
+        login.find({email:req.body.email},function(err,result){
+            if(err){
+                console.log("Error detected!");
             }
             else{
-                login.find({password:req.body.password},function(err,result){
-                    if(err){
-                        console.log("Error found!");
-                    }
-                    else{
-                        if(result.length !=0){
-                            res.render("success",{result:"Password already exists"});
-                            //res.sendFile(__dirname+"/signup.html");
+                if(result.length != 0){
+                    res.render("success",{result:"Email-ID already registered"});
+                }
+                else{
+                    
+                    login.find({},function(err,answer){
+                        if(err){
+                            console.log("Error detected");
                         }
                         else{
-                            res.sendFile(__dirname+"/home.html");
-                            user.save();
+                            let f = false;
+                            for(let i=0;i<answer.length;i++){
+                                console.log("hello");
+                                let pp =answer[i].password;
+                                bcrypt.compare(req.body.password,pp,function(err,callbac){
+                                    if(err){
+                                        console.log("Error");
+                                    }
+                                    if(callbac === true){
+                                        f = false;
+                                    }
+                                    else{
+                                        f = true;
+                                    }
+                                });
+                                if(f === false){
+                                    break;
+                                }
+                            }
+                            if(f){
+                                res.sendFile(__dirname+"/home.html");
+                                user.save();
+                            }
+                            else{
+                                res.render("success",{result:"Password already exists"});
+                            }
                         }
-                    }
-                });
+                    });
+                    
+                }
             }
-        }
+        });
     });
 });
 app.get("/signup",function(req,res){
@@ -161,7 +180,6 @@ app.post("/newroute",function(req,res){
         res.sendFile(__dirname+"/hotel3.html");
     }
     else if(req.body.input === "Paddle HouseBoats 1"){
-        //res.sendFile(__dirname+"/hotel4.html");
             let count = 0;        
             fourthroom.find({},function(err,records){
             if(err){
@@ -226,10 +244,6 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out <= current_check_in){
-                    res.render("success",{result:"Enter Valid Dates"});
-                }
-                else{
                     records.forEach(function(item){
                         //check invalid dates
                         const checking_in = new Date(item.checkindate);
@@ -241,22 +255,18 @@ app.post("/checkrooms",function(req,res){
                         if( (current_check_out>=checking_in && current_check_out<=checking_out ) ){
                             flag=false;
                         }
-                        if(   (checking_in>=current_check_in && checking_in <=checking_out) &&
-                            (checking_out>=current_check_in && checking_out <=checking_out)  ){
-                                flag=false;
+                        if(current_check_in <= checking_in && current_check_out >=checking_out){
+                            flag=false;
                         }
                     });
     
                     if(flag == true){
                         //fi.save();
                         res.render("booking",{index:1,data:JSON.stringify(fi)});
-                        //res.render("payment",{index:1});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
                     }
-                    
-                }
             }
         });
     }
@@ -307,10 +317,6 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out <= current_check_in){
-                    res.render("success",{result:"Enter Valid Dates"});
-                }
-                else{
                     records.forEach(function(item){
                         //check invalid dates
                         const checking_in = new Date(item.checkindate);
@@ -322,20 +328,17 @@ app.post("/checkrooms",function(req,res){
                         if( (current_check_out>=checking_in && current_check_out<=checking_out ) ){
                             flag=false;
                         }
-                        if(   (checking_in>=current_check_in && checking_in <=checking_out) &&
-                            (checking_out>=current_check_in && checking_out <=checking_out)  ){
-                                flag=false;
+                        if(current_check_in <= checking_in && current_check_out >=checking_out){
+                            flag=false;
                         }
                     });
                     if(flag == true){
                         //se.save();
-                        res.render("payment",{index:2});
+                        res.render("booking",{index:2,data:JSON.stringify(se)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
                     }
-                    
-                }
             }
         });
     }
@@ -389,10 +392,6 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out <= current_check_in){
-                    res.render("success",{result:"Enter Valid Dates"});
-                }
-                else{
                     records.forEach(function(item){
                         //check invalid dates
                         const checking_in = new Date(item.checkindate);
@@ -404,21 +403,18 @@ app.post("/checkrooms",function(req,res){
                         if( (current_check_out>=checking_in && current_check_out<=checking_out ) ){
                             flag=false;
                         }
-                        if(   (checking_in>=current_check_in && checking_in <=checking_out) &&
-                            (checking_out>=current_check_in && checking_out <=checking_out)  ){
-                                flag=false;
+                        if(current_check_in <= checking_in && current_check_out >=checking_out){
+                            flag=false;
                         }
                     });
     
                     if(flag == true){
                         //th.save();
-                        res.render("payment",{index:3});
+                        res.render("booking",{index:3,data:JSON.stringify(th)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
                     }
-                    
-                }
             }
         });
     }
@@ -432,7 +428,6 @@ app.post("/checkrooms",function(req,res){
             num:4
         });
         var count = 0;
-
         //wipe out data if checkout == today's date
         fourthroom.find({},function(err,records){
             records.forEach(function(item){
@@ -462,9 +457,8 @@ app.post("/checkrooms",function(req,res){
                 }
             }); 
         });
-
+        
         //insert new records
-
         fourthroom.find({},function(err,records){
 
             if(err){console.log("Error");}
@@ -472,16 +466,9 @@ app.post("/checkrooms",function(req,res){
                 if(records.length == 10){
                     res.render("success",{result:"No Boats are available!"});
                 }
-                else{
-                    let current_check_in = new Date(req.body.checkin); 
-                    let current_check_out = new Date(req.body.checkout);
-                    if(current_check_out <= current_check_in){
-                        res.render("success",{result:"Enter Valid Dates"});
-                    }
-                    else{     
-                        xy.save();
-                        res.render("payment",{index:4});
-                    }
+                else{   
+                    //xy.save();
+                    res.render("booking",{index:4,data:JSON.stringify(xy)});
                 }
             }
         });
@@ -533,10 +520,6 @@ app.post("/checkrooms",function(req,res){
             }
             else{
                 let flag = true;
-                if(current_check_out < current_check_in){
-                    res.render("success",{result:"Enter Valid Dates"});
-                }
-                else{
                     records.forEach(function(item){
                         //check invalid dates
                         const checking_in = new Date(item.checkindate);
@@ -548,21 +531,18 @@ app.post("/checkrooms",function(req,res){
                         if( (current_check_out>=checking_in && current_check_out<=checking_out ) ){
                             flag=false;
                         }
-                        if(   (checking_in>=current_check_in && checking_in <=checking_out) &&
-                            (checking_out>=current_check_in && checking_out <=checking_out)  ){
-                                flag=false;
+                        if(current_check_in <= checking_in && current_check_out >=checking_out){
+                            flag=false;
                         }
                     });
     
                     if(flag == true){
                         //ab.save();
-                        res.render("payment",{index:5});
+                        res.render("booking",{index:5,data:JSON.stringify(ab)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
                     }
-                    
-                }
             }
         });
     }
