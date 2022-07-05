@@ -55,7 +55,7 @@ const roomSchema = new mongoose.Schema({
         required:[true,"Hotel number required"]
     }
 });
-
+var fi,se,th,ab,xy;
 const login = new mongoose.model("Login",HotelSchema);
 
 // creating models
@@ -69,8 +69,8 @@ const fifthroom = new mongoose.model("RoomFive",roomSchema);
 //end of models
 
 app.get("/",function(req,res){  
-    //res.sendFile(__dirname+"/home.html");
-    res.sendFile(__dirname+"/signup.html");
+    res.sendFile(__dirname+"/home.html");
+    //res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
     
@@ -198,7 +198,7 @@ app.post("/newroute",function(req,res){
 
 app.post("/checkrooms",function(req,res){
     if(req.body.index == 1){
-        const fi = new firstroom({
+        fi = new firstroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -261,8 +261,7 @@ app.post("/checkrooms",function(req,res){
                     });
     
                     if(flag == true){
-                        //fi.save();
-                        res.render("booking",{index:1,data:JSON.stringify(fi)});
+                        res.render("donepayment",{index:1,result:"Rooms Available",data:JSON.stringify(fi)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -271,7 +270,7 @@ app.post("/checkrooms",function(req,res){
         });
     }
     else if(req.body.index == 2){
-        const se = new secondroom({
+        se = new secondroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -333,8 +332,9 @@ app.post("/checkrooms",function(req,res){
                         }
                     });
                     if(flag == true){
-                        //se.save();
-                        res.render("booking",{index:2,data:JSON.stringify(se)});
+                 
+                        res.render("donepayment",{index:2,result:"Rooms Available",data:JSON.stringify(se)});
+                        
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -344,8 +344,7 @@ app.post("/checkrooms",function(req,res){
     }
     //third hotel
     else if(req.body.index == 3){
-        console.log(req.body.index);
-        const th = new thirdroom({
+        th = new thirdroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -409,8 +408,7 @@ app.post("/checkrooms",function(req,res){
                     });
     
                     if(flag == true){
-                        //th.save();
-                        res.render("booking",{index:3,data:JSON.stringify(th)});
+                        res.render("donepayment",{index:3,result:"Rooms Available",data:JSON.stringify(th)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -419,7 +417,7 @@ app.post("/checkrooms",function(req,res){
         });
     }
     else if(req.body.index == 4){
-        const xy = new fourthroom({
+        xy = new fourthroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -457,7 +455,7 @@ app.post("/checkrooms",function(req,res){
                 }
             }); 
         });
-        
+
         //insert new records
         fourthroom.find({},function(err,records){
 
@@ -467,14 +465,13 @@ app.post("/checkrooms",function(req,res){
                     res.render("success",{result:"No Boats are available!"});
                 }
                 else{   
-                    //xy.save();
-                    res.render("booking",{index:4,data:JSON.stringify(xy)});
+                    res.render("donepayment",{index:4,result:"Rooms Available",data:JSON.stringify(xy)});
                 }
             }
         });
     }
     else if(req.body.index == 5){
-        const ab = new fifthroom({
+        ab = new fifthroom({
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -537,8 +534,7 @@ app.post("/checkrooms",function(req,res){
                     });
     
                     if(flag == true){
-                        //ab.save();
-                        res.render("booking",{index:5,data:JSON.stringify(ab)});
+                        res.render("donepayment",{index:5,result:"Rooms Available",data:JSON.stringify(ab)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -547,48 +543,60 @@ app.post("/checkrooms",function(req,res){
         });
     }
 });
+app.get("/con",function(req,res){
+    res.sendFile(__dirname+"/confirm.html");
+});
 app.post("/confirmbooking",function(req,res){
     let obj = req.body.number;
-    obj = JSON.parse(obj);
-    if(obj.num === 1){
-        firstroom.insertMany([obj],function(err,respone){
+    if(obj == 1){
+        firstroom.insertMany([fi],function(err,respone){
             if(err){
                 console.log("Error");
             }
+            else{
+                res.sendFile(__dirname+"/home.html");
+            }
         });
-        res.render("payment",{index:1});
     }
     else if(obj.num == 2){
-        secondroom.insertMany([obj],function(err,respone){
+        secondroom.insertMany([se],function(err,respone){
             if(err){
                 console.log("Error");
             }
+            else{
+                res.sendFile(__dirname+"/home.html");
+            }
         });
-        res.render("payment",{index:2});
     }
     else if(obj.num == 3){
-        thirdroom.insertMany([obj],function(err,respone){
+        thirdroom.insertMany([th],function(err,respone){
             if(err){
                 console.log("Error");
             }
+            else{
+                res.sendFile(__dirname+"/home.html");
+            }
         });
-        res.render("payment",{index:3});
     }
     else if(obj.num == 4){
-        fourthroom.insertMany([obj],function(err,respone){
+        fourthroom.insertMany([xy],function(err,respone){
             if(err){
                 console.log("Error");
             }
+            else{
+                res.sendFile(__dirname+"/home.html");
+            }
         });
-        res.render("payment",{index:4});
     }
     else{
-        fifthroom.insertMany([obj],function(err,respone){
+        fifthroom.insertMany([ab],function(err,respone){
             if(err){
                 console.log("Error");
             }
+            else{
+                res.sendFile(__dirname+"/home.html");
+            }
         });
-        res.render("payment",{index:5});
     }
 });
 app.listen(3000,function(){
