@@ -1,0 +1,14 @@
+#inputhotel{
+    border-radius: 0.5rem;
+    height: 3rem;
+  }
+  #searchbt{
+    border-radius: 0.5rem;
+    height: 3rem;
+  }
+  #logoutbt{
+    border-radius: 0.5rem;
+    height: 3rem;
+    width: 5rem;
+    white-space: nowrap;
+  }

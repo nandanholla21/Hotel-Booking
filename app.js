@@ -56,6 +56,7 @@ const roomSchema = new mongoose.Schema({
     }
 });
 var fi,se,th,ab,xy;
+var count = 0;
 const login = new mongoose.model("Login",HotelSchema);
 
 // creating models
@@ -73,14 +74,12 @@ app.get("/",function(req,res){
     //res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
-    
     res.sendFile(__dirname+"/login.html");
 });
 
 app.post("/abc",function(req,res){
     res.render("success",{result:"Success"});
 });
-
 app.post("/login",function(req,res){
     login.findOne({email:req.body.email},function(err,result){
         if(err){
@@ -169,30 +168,56 @@ app.post("/jumplogin",function(req,res){
     res.sendFile(__dirname+"/login.html");
 });
 
+app.get("/erumdadam-the-treehouse",function(req,res){
+    res.sendFile(__dirname+"/hotel1.html");
+});
+app.get("/le-tranquil",function(req,res){
+    res.sendFile(__dirname+"/hotel2.html");
+});
+app.get("/quinta-da-santana-luxury-villa",function(req,res){
+    res.sendFile(__dirname+"/hotel3.html");
+});
+app.get("/sunny-side-cottage-with-lake-view",function(req,res){
+    res.sendFile(__dirname+"/hotel5.html");
+});
+app.get("/paddle-houseboats-1",function(req,res){
+    res.render("hotel4",{bc:count});
+});
 app.post("/newroute",function(req,res){
+    console.log(req.body);
+    if(req.body.input === ''){
+        res.redirect("/signup");
+    }
+    if(req.body.logoutstatus){
+        res.redirect("/signup");
+    }
     if(req.body.input === "Erumdadam- The Treehouse"){
-        res.sendFile(__dirname+"/hotel1.html");
+        res.redirect("/erumdadam-the-treehouse");
+        //res.sendFile(__dirname+"/hotel1.html");
     }
     else if(req.body.input === "Le Tranquil"){
-        res.sendFile(__dirname+"/hotel2.html");
+        res.redirect("/le-tranquil");
+        //res.sendFile(__dirname+"/hotel2.html");
     }
     else if(req.body.input === "Quinta Da Santana Luxury Villa"){
-        res.sendFile(__dirname+"/hotel3.html");
+        res.redirect("/quinta-da-santana-luxury-villa");
+        // res.sendFile(__dirname+"/hotel3.html");
     }
     else if(req.body.input === "Paddle HouseBoats 1"){
-            let count = 0;        
+            //let count = 0;        
             fourthroom.find({},function(err,records){
             if(err){
                 console.log("Error detected !");
             }
             else{
                 count = 10-records.length;
-                res.render("hotel4",{bc:count});
+                res.redirect("/paddle-houseboats-1");
+                // res.render("hotel4",{bc:count});
             }
         });
     }
     else{
-        res.sendFile(__dirname+"/hotel5.html");
+        res.redirect("/sunny-side-cottage-with-lake-view");
     }
 });
 
