@@ -12,28 +12,12 @@
     <script src="process.js"></script> 
     <link rel="icon"  href="img/Hotel-Booking.jpg">
 </head>
-<style>
-    #inputhotel{
-      border-radius: 0.5rem;
-      height: 3rem;
-    }
-    #searchbt{
-      border-radius: 0.5rem;
-      height: 3rem;
-    }
-    #logoutbt{
-      border-radius: 0.5rem;
-      height: 3rem;
-      width: 5rem;
-      white-space: nowrap;
-    }
-</style>
 <body >
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand">HOTEL-BOOKING</a>
           <form class="d-flex" method="POST" action="/newroute" autocomplete="off">
-            <input id="inputhotel" list="list_of_hotels"class="form-control me-3" type="search" placeholder="Search Hotel" aria-label="Search" name="input" value="">
+            <input id="inputhotel" list="list_of_hotels"class="form-control me-2" type="search" placeholder="Search Hotel" aria-label="Search" name="input" value="">
             <datalist id="list_of_hotels">
               <option>Erumdadam- The Treehouse</option>
               <option>Le Tranquil</option>
@@ -42,10 +26,11 @@
               <option>Sunny Side Cottage with lake view</option>
             </datalist>
             <button id="searchbt" class="btn btn-outline-success" type="submit">Search</button>
-            <div style="padding: 3%;"></div>
-            <form method="GET" action="/logout">
-              <button id="logoutbt" class="btn btn-outline-success form-control me-1" type="submit">Log Out</button>
-            </form>
+            <!-- <div style="padding: 3%;"></div> -->
+            
+          </form>
+          <form method="POST" action="/logout">
+            <button id="logoutbt" class="btn btn-outline-success form-control me-1" type="submit">Log Out</button>
           </form>
           <div class="container" style="padding: 4%;">
             <div class="col-sm-12" style="display: flex;justify-content: center;">
@@ -58,6 +43,3 @@
       <p></p>
 </body>
 </html>
-<script>
-
-</script>

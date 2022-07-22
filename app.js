@@ -70,8 +70,8 @@ const fifthroom = new mongoose.model("RoomFive",roomSchema);
 //end of models
 
 app.get("/",function(req,res){  
-    res.sendFile(__dirname+"/home.html");
-    //res.sendFile(__dirname+"/signup.html");
+    //res.sendFile(__dirname+"/home.html");
+    res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
     res.sendFile(__dirname+"/login.html");
@@ -105,7 +105,9 @@ app.post("/login",function(req,res){
     });
 });
 app.post("/signup",function(req,res){
-
+    if(req.body.email === '' || req.body.name === '' || req.body.password === ''){
+        res.render("success",{result:"Field cannot be empty"});
+    }
     bcrypt.hash(req.body.password,saltRounds,function(err,hash){
         const user = new login({
             name:req.body.name,
@@ -121,7 +123,6 @@ app.post("/signup",function(req,res){
                     res.render("success",{result:"Email-ID already registered"});
                 }
                 else{
-                    
                     login.find({},function(err,answer){
                         if(err){
                             console.log("Error detected");
@@ -129,7 +130,7 @@ app.post("/signup",function(req,res){
                         else{
                             let f = false;
                             for(let i=0;i<answer.length;i++){
-                                console.log("hello");
+                                //console.log("hello");
                                 let pp =answer[i].password;
                                 bcrypt.compare(req.body.password,pp,function(err,callbac){
                                     if(err){
@@ -155,7 +156,6 @@ app.post("/signup",function(req,res){
                             }
                         }
                     });
-                    
                 }
             }
         });
@@ -167,30 +167,168 @@ app.get("/signup",function(req,res){
 app.post("/jumplogin",function(req,res){
     res.sendFile(__dirname+"/login.html");
 });
-
+app.get("/home",function(req,res){
+    res.sendFile(__dirname+"/home.html");
+});
 app.get("/erumdadam-the-treehouse",function(req,res){
+    firstroom.find({},function(err,records){
+        records.forEach(function(item){
+            var v = new Date();
+            var year = v.getFullYear();
+            var month = v.getMonth()+1;
+            if(month<10){
+                month='0'+month;
+            }
+            let day = v.getDate();
+            if(day <10){
+                day='0'+day;
+            }
+            var ff=0;
+            var check_out_param;
+            let array = item.checkoutdate.split("-");
+            if( array[0] == year && array[1] == month && array[2] == day){
+                check_out_param = item.checkoutdate;
+                firstroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        console.log("Deleted successfully");
+                    }
+                });
+            }
+        }); 
+    });
     res.sendFile(__dirname+"/hotel1.html");
 });
 app.get("/le-tranquil",function(req,res){
+    secondroom.find({},function(err,records){
+        records.forEach(function(item){
+            var v = new Date();
+            var year = v.getFullYear();
+            var month = v.getMonth()+1;
+            if(month<10){
+                month='0'+month;
+            }
+            let day = v.getDate();
+            if(day <10){
+                day='0'+day;
+            }
+            var ff=0;
+            var check_out_param;
+            let array = item.checkoutdate.split("-");
+            if( array[0] == year && array[1] == month && array[2] == day){
+                check_out_param = item.checkoutdate;
+                secondroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        console.log("Deleted successfully");
+                    }
+                });
+            }
+        }); 
+    });
     res.sendFile(__dirname+"/hotel2.html");
 });
 app.get("/quinta-da-santana-luxury-villa",function(req,res){
+    thirdroom.find({},function(err,records){
+        records.forEach(function(item){
+            var v = new Date();
+            var year = v.getFullYear();
+            var month = v.getMonth()+1;
+            if(month<10){
+                month='0'+month;
+            }
+            let day = v.getDate();
+            if(day <10){
+                day='0'+day;
+            }
+            var ff=0;
+            var check_out_param;
+            let array = item.checkoutdate.split("-");
+            if( array[0] == year && array[1] == month && array[2] == day){
+                check_out_param = item.checkoutdate;
+                thirdroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        console.log("Deleted successfully");
+                    }
+                });
+            }
+        }); 
+    });
     res.sendFile(__dirname+"/hotel3.html");
 });
 app.get("/sunny-side-cottage-with-lake-view",function(req,res){
+    fifthroom.find({},function(err,records){
+        records.forEach(function(item){
+            var v = new Date();
+            var year = v.getFullYear();
+            var month = v.getMonth()+1;
+            if(month<10){
+                month='0'+month;
+            }
+            let day = v.getDate();
+            if(day <10){
+                day='0'+day;
+            }
+            var ff=0;
+            var check_out_param;
+            let array = item.checkoutdate.split("-");
+            if( array[0] == year && array[1] == month && array[2] == day){
+                check_out_param = item.checkoutdate;
+                fifthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        console.log("Deleted successfully");
+                    }
+                });
+            }
+        }); 
+    });
     res.sendFile(__dirname+"/hotel5.html");
 });
 app.get("/paddle-houseboats-1",function(req,res){
+    fourthroom.find({},function(err,records){
+        records.forEach(function(item){
+            var v = new Date();
+            var year = v.getFullYear();
+            var month = v.getMonth()+1;
+            if(month<10){
+                month='0'+month;
+            }
+            let day = v.getDate();
+            if(day <10){
+                day='0'+day;
+            }
+            var ff=0;
+            var check_out_param;
+            let array = item.checkoutdate.split("-");
+            if( array[0] == year && array[1] == month && array[2] == day){
+                check_out_param = item.checkoutdate;
+                fourthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
+                    if(err){
+                        console.log("Error detected");
+                    }
+                    else{
+                        console.log("Deleted successfully");
+                    }
+                });
+            }
+        }); 
+    });
     res.render("hotel4",{bc:count});
 });
+app.post("/logout",function(req,res){
+    res.redirect("/signup");
+});
 app.post("/newroute",function(req,res){
-    console.log(req.body);
-    if(req.body.input === ''){
-        res.redirect("/signup");
-    }
-    if(req.body.logoutstatus){
-        res.redirect("/signup");
-    }
     if(req.body.input === "Erumdadam- The Treehouse"){
         res.redirect("/erumdadam-the-treehouse");
         //res.sendFile(__dirname+"/hotel1.html");
@@ -220,7 +358,6 @@ app.post("/newroute",function(req,res){
         res.redirect("/sunny-side-cottage-with-lake-view");
     }
 });
-
 app.post("/checkrooms",function(req,res){
     if(req.body.index == 1){
         fi = new firstroom({
@@ -230,34 +367,6 @@ app.post("/checkrooms",function(req,res){
             children:req.body.children,
             infants:req.body.infants,
             num:1
-        });
-        firstroom.find({},function(err,records){
-            records.forEach(function(item){
-                var v = new Date();
-                var year = v.getFullYear();
-                var month = v.getMonth()+1;
-                if(month<10){
-                    month='0'+month;
-                }
-                let day = v.getDate();
-                if(day <10){
-                    day='0'+day;
-                }
-                var ff=0;
-                var check_out_param;
-                let array = item.checkoutdate.split("-");
-                if( array[0] == year && array[1] == month && array[2] == day){
-                    check_out_param = item.checkoutdate;
-                    firstroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
-                        if(err){
-                            console.log("Error detected");
-                        }
-                        else{
-                            console.log("Deleted successfully");
-                        }
-                    });
-                }
-            }); 
         });
         firstroom.find({},function(err,records){
 
@@ -286,7 +395,11 @@ app.post("/checkrooms",function(req,res){
                     });
     
                     if(flag == true){
-                        res.render("donepayment",{index:1,result:"Rooms Available",data:JSON.stringify(fi)});
+                        let beg = new Date(req.body.checkin);
+                        let end = new Date(req.body.checkout);
+                        const diffTime = Math.abs(end - beg);
+                        const dif = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        res.render("donepayment",{dd:dif,index:1,result:"Rooms Available",data:JSON.stringify(fi)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -304,34 +417,6 @@ app.post("/checkrooms",function(req,res){
             num:2
         });
         secondroom.find({},function(err,records){
-            records.forEach(function(item){
-                var v = new Date();
-                var year = v.getFullYear();
-                var month = v.getMonth()+1;
-                if(month<10){
-                    month='0'+month;
-                }
-                let day = v.getDate();
-                if(day <10){
-                    day='0'+day;
-                }
-                var ff=0;
-                var check_out_param;
-                let array = item.checkoutdate.split("-");
-                if( array[0] == year && array[1] == month && array[2] == day){
-                    check_out_param = item.checkoutdate;
-                    secondroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
-                        if(err){
-                            console.log("Error detected");
-                        }
-                        else{
-                            console.log("Deleted successfully");
-                        }
-                    });
-                }
-            }); 
-        });
-        secondroom.find({},function(err,records){
 
             let current_check_in = new Date(req.body.checkin); 
             let current_check_out = new Date(req.body.checkout);
@@ -357,9 +442,12 @@ app.post("/checkrooms",function(req,res){
                         }
                     });
                     if(flag == true){
-                 
-                        res.render("donepayment",{index:2,result:"Rooms Available",data:JSON.stringify(se)});
-                        
+                        let beg = new Date(req.body.checkin);
+                        let end = new Date(req.body.checkout);
+                        const diffTime = Math.abs(end - beg);
+                        const dif = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        res.render("donepayment",{dd:dif,index:2,result:"Rooms Available",data:JSON.stringify(se)});
+                        //res.render("donepayment",{index:2,result:"Rooms Available",data:JSON.stringify(se)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -377,35 +465,7 @@ app.post("/checkrooms",function(req,res){
             infants:req.body.infants,
             num:3
         });
-        //delete records of checkout == today
-        thirdroom.find({},function(err,records){
-            records.forEach(function(item){
-                var v = new Date();
-                var year = v.getFullYear();
-                var month = v.getMonth()+1;
-                if(month<10){
-                    month='0'+month;
-                }
-                let day = v.getDate();
-                if(day <10){
-                    day='0'+day;
-                }
-                var ff=0;
-                var check_out_param;
-                let array = item.checkoutdate.split("-");
-                if( array[0] == year && array[1] == month && array[2] == day){
-                    check_out_param = item.checkoutdate;
-                    thirdroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
-                        if(err){
-                            console.log("Error detected");
-                        }
-                        else{
-                            console.log("Deleted successfully");
-                        }
-                    });
-                }
-            }); 
-        });
+        //delete records of checkout == today 
         thirdroom.find({},function(err,records){
 
             let current_check_in = new Date(req.body.checkin); 
@@ -433,7 +493,12 @@ app.post("/checkrooms",function(req,res){
                     });
     
                     if(flag == true){
-                        res.render("donepayment",{index:3,result:"Rooms Available",data:JSON.stringify(th)});
+                        let beg = new Date(req.body.checkin);
+                        let end = new Date(req.body.checkout);
+                        const diffTime = Math.abs(end - beg);
+                        const dif = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        res.render("donepayment",{dd:dif,index:3,result:"Rooms Available",data:JSON.stringify(th)});
+                        //res.render("donepayment",{index:3,result:"Rooms Available",data:JSON.stringify(th)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -451,46 +516,22 @@ app.post("/checkrooms",function(req,res){
             num:4
         });
         var count = 0;
-        //wipe out data if checkout == today's date
-        fourthroom.find({},function(err,records){
-            records.forEach(function(item){
-                var v = new Date();
-                var year = v.getFullYear();
-                var month = v.getMonth()+1;
-                if(month<10){
-                    month='0'+month;
-                }
-                let day = v.getDate();
-                if(day <10){
-                    day='0'+day;
-                }
-                var ff=0;
-                var check_out_param;
-                let array = item.checkoutdate.split("-");
-                if( array[0] == year && array[1] == month && array[2] == day){
-                    check_out_param = item.checkoutdate;
-                    fourthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
-                        if(err){
-                            console.log("Error detected");
-                        }
-                        else{
-                            console.log("Deleted successfully");
-                        }
-                    });
-                }
-            }); 
-        });
-
         //insert new records
         fourthroom.find({},function(err,records){
-
-            if(err){console.log("Error");}
+            if(err){
+                console.log("Error");
+            }
             else{
                 if(records.length == 10){
                     res.render("success",{result:"No Boats are available!"});
                 }
-                else{   
-                    res.render("donepayment",{index:4,result:"Rooms Available",data:JSON.stringify(xy)});
+                else{ 
+                    let beg = new Date(req.body.checkin);
+                    let end = new Date(req.body.checkout);
+                    const diffTime = Math.abs(end - beg);
+                    const dif = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    res.render("donepayment",{dd:dif,index:4,result:"Rooms Available",data:JSON.stringify(xy)});  
+                    //res.render("donepayment",{index:4,result:"Rooms Available",data:JSON.stringify(xy)});
                 }
             }
         });
@@ -505,35 +546,6 @@ app.post("/checkrooms",function(req,res){
             num:5
         });
         fifthroom.find({},function(err,records){
-            records.forEach(function(item){
-                var v = new Date();
-                var year = v.getFullYear();
-                var month = v.getMonth()+1;
-                if(month<10){
-                    month='0'+month;
-                }
-                let day = v.getDate();
-                if(day <10){
-                    day='0'+day;
-                }
-                var ff=0;
-                var check_out_param;
-                let array = item.checkoutdate.split("-");
-                if( array[0] == year && array[1] == month && array[2] == day){
-                    check_out_param = item.checkoutdate;
-                    fifthroom.deleteOne({checkoutdate:check_out_param},function(err,obj){
-                        if(err){
-                            console.log("Error detected");
-                        }
-                        else{
-                            console.log("Deleted successfully");
-                        }
-                    });
-                }
-            }); 
-        });
-        fifthroom.find({},function(err,records){
-
             let current_check_in = new Date(req.body.checkin); 
             let current_check_out = new Date(req.body.checkout);
     
@@ -557,9 +569,13 @@ app.post("/checkrooms",function(req,res){
                             flag=false;
                         }
                     });
-    
                     if(flag == true){
-                        res.render("donepayment",{index:5,result:"Rooms Available",data:JSON.stringify(ab)});
+                        let beg = new Date(req.body.checkin);
+                        let end = new Date(req.body.checkout);
+                        const diffTime = Math.abs(end - beg);
+                        const dif = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        res.render("donepayment",{dd:dif,index:5,result:"Rooms Available",data:JSON.stringify(ab)});
+                        //res.render("donepayment",{index:5,result:"Rooms Available",data:JSON.stringify(ab)});
                     }
                     else{
                         res.render("success",{result:"Rooms Unavailable"});
@@ -583,7 +599,7 @@ app.post("/confirmbooking",function(req,res){
             }
         });
     }
-    else if(obj.num == 2){
+    else if(obj == 2){
         secondroom.insertMany([se],function(err,respone){
             if(err){
                 console.log("Error");
@@ -593,7 +609,7 @@ app.post("/confirmbooking",function(req,res){
             }
         });
     }
-    else if(obj.num == 3){
+    else if(obj == 3){
         thirdroom.insertMany([th],function(err,respone){
             if(err){
                 console.log("Error");
@@ -603,7 +619,7 @@ app.post("/confirmbooking",function(req,res){
             }
         });
     }
-    else if(obj.num == 4){
+    else if(obj == 4){
         fourthroom.insertMany([xy],function(err,respone){
             if(err){
                 console.log("Error");

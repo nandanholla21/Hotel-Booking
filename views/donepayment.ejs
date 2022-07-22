@@ -23,8 +23,9 @@
                 console.log(localStorage);
             </script>
             <form>
-              <script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.erumdadam_the_treehouse="4" data-payment_button_id="pl_JpJO7PZePqIXvt" async>
-              </script> 
+              <script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.erumdadam_the_treehouse="<%= dd%>" data-payment_button_id="pl_JpJO7PZePqIXvt" async>
+              </script>
+            </form>
           <% } %>
             <!-- button for hotel 2 -->
           <% if(index == 2) {  %>
@@ -33,7 +34,7 @@
                 window.localStorage.setItem('hotel',2);
                 console.log(localStorage);
             </script>
-            <form ><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbZ4zJBmcbOKm" async> </script> </form>
+           <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.le_tranquil="<%= dd%>"  data-payment_button_id="pl_JvhHWIc1au1ceb" async> </script> </form>
           <% } %>
             <!-- button for hotel 3 -->
             <% if(index == 3) {  %>
@@ -42,7 +43,7 @@
                     window.localStorage.setItem('hotel',3);
                     console.log(localStorage);
                 </script>
-            <form ><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbbBCXjWnx4Fx" async> </script> </form>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.quinta_da_santana_luxury_villa="<%= dd%>" data-payment_button_id="pl_JvheZba2Ay1yEC" async> </script> </form>
           <% } %>
             <!-- button for hotel 4 -->
           <% if(index == 4) {  %>
@@ -51,7 +52,7 @@
                 window.localStorage.setItem('hotel',4);
                 console.log(localStorage);
             </script>
-            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Jlbcvg6UKYzYh4" async> </script> </form>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.paddle_houseboats="<%= dd%>" data-payment_button_id="pl_JvhvyhppT9EAF7" async> </script> </form>
           <% } %>
           <!-- button for hotel 5 -->
           <% if(index == 5) {  %>
@@ -60,7 +61,7 @@
                 window.localStorage.setItem('hotel',5);
                 console.log(localStorage);
             </script>
-            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JlbevVbphv6QA0" async> </script> </form>
+            <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-prefill.amount.sunny_side_cottage_with_lake_view="<%= dd%>" data-payment_button_id="pl_Jvi2uVgO0FE4O1" async> </script> </form>
           <% } %>
         </div>
     </div>

@@ -16,65 +16,6 @@
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" /> 
     <link href="styles.css" rel="stylesheet">
-    <style>
-        img{
-            width: 15rem;
-            height: 15rem;
-            border-radius: 0.5rem;
-            margin: auto;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 4px 12px;
-        }
-        .footer{
-          width: 100%;
-          height: 5rem;
-          background-color: lightblue;
-        }
-        .row{
-          margin: 2%;
-          text-align: center;
-        }
-        img:hover{
-          opacity: 0.87;
-        }
-        .item{
-          margin-bottom:10px;
-        }
-        body{
-          background-color:white;
-          font-family:Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
-        }
-        h3{
-          margin: 1%;
-        }
-        small{
-          margin: 2%;
-          padding: 1%;
-        }
-        hr{
-          width: 40%;
-          border-bottom: none;
-          margin: 50px auto;
-        }
-        .price{
-          margin-right:0px;
-          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        }
-        td{
-          padding: 4px;
-        }
-        .check td{
-          padding-left: 31px;
-          padding-bottom: 13px;
-          margin: 10px;
-          text-align: center;
-        }
-        input[type="number"]{
-          margin-left: -12px;
-        }
-        .policy{
-          text-align: center;
-        }
-    </style>
 </head>
 <body>
   <nav class="navbar navbar-light bg-light">
@@ -90,8 +31,10 @@
           <option>Sunny Side Cottage with lake view</option>
         </datalist>
         <button id="searchbt" class="btn btn-outline-success" name="searchstatus" value="search" type="submit">Search</button>
-        <div style="padding: 3%;"></div>
-        <button id="logoutbt" class="btn btn-outline-success form-control me-1" name="logoutstatus" value="logout" type="submit">Log Out</button>
+        <!-- <div style="padding: 3%;"></div> -->
+      </form>
+      <form method="POST" action="/logout">
+        <button id="logoutbt" class="btn btn-outline-success form-control me-1" type="submit">Log Out</button>
       </form>
     </div>
   </nav>
