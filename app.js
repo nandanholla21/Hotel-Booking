@@ -29,7 +29,10 @@ const HotelSchema = new mongoose.Schema({
 });
 
 const roomSchema = new mongoose.Schema({
-
+    email:{
+        type:String,
+        required:[true,"email id required"]
+    },
     checkindate:{
         type:String,
         required:[true,"Check in date required"]
@@ -70,8 +73,8 @@ const fifthroom = new mongoose.model("RoomFive",roomSchema);
 //end of models
 
 app.get("/",function(req,res){  
-    //res.sendFile(__dirname+"/home.html");
-    res.sendFile(__dirname+"/signup.html");
+    res.sendFile(__dirname+"/home.html");
+    //res.sendFile(__dirname+"/signup.html");
 });
 app.get("/login",function(req,res){
     res.sendFile(__dirname+"/login.html");
@@ -128,24 +131,25 @@ app.post("/signup",function(req,res){
                             console.log("Error detected");
                         }
                         else{
-                            let f = false;
+                            let f = true;
                             for(let i=0;i<answer.length;i++){
                                 //console.log("hello");
                                 let pp =answer[i].password;
-                                bcrypt.compare(req.body.password,pp,function(err,callbac){
-                                    if(err){
-                                        console.log("Error");
-                                    }
-                                    if(callbac === true){
-                                        f = false;
-                                    }
-                                    else{
-                                        f = true;
-                                    }
-                                });
-                                if(f === false){
+                                if( pp === hash){
+                                    f=false;
                                     break;
                                 }
+                                // bcrypt.compare(req.body.password,pp,function(err,callbac){
+                                //     if(err){
+                                //         console.log("Error");
+                                //     }
+                                //     else if(callbac === true){
+                                //         f = false;
+                                //     }
+                                //     else{
+                                //         f = true;
+                                //     }
+                                // });
                             }
                             if(f){
                                 res.sendFile(__dirname+"/home.html");
@@ -361,6 +365,7 @@ app.post("/newroute",function(req,res){
 app.post("/checkrooms",function(req,res){
     if(req.body.index == 1){
         fi = new firstroom({
+            email:"",
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -409,6 +414,7 @@ app.post("/checkrooms",function(req,res){
     }
     else if(req.body.index == 2){
         se = new secondroom({
+            email:"",
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -458,6 +464,7 @@ app.post("/checkrooms",function(req,res){
     //third hotel
     else if(req.body.index == 3){
         th = new thirdroom({
+            email:"",
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -508,6 +515,7 @@ app.post("/checkrooms",function(req,res){
     }
     else if(req.body.index == 4){
         xy = new fourthroom({
+            email:"",
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -538,6 +546,7 @@ app.post("/checkrooms",function(req,res){
     }
     else if(req.body.index == 5){
         ab = new fifthroom({
+            email:"",
             checkindate:req.body.checkin,
             checkoutdate:req.body.checkout,
             adults:req.body.adults,
@@ -590,6 +599,7 @@ app.get("/con",function(req,res){
 app.post("/confirmbooking",function(req,res){
     let obj = req.body.number;
     if(obj == 1){
+        fi.email=req.body.emailid;
         firstroom.insertMany([fi],function(err,respone){
             if(err){
                 console.log("Error");
@@ -600,6 +610,7 @@ app.post("/confirmbooking",function(req,res){
         });
     }
     else if(obj == 2){
+        se.email = req.body.emailid;
         secondroom.insertMany([se],function(err,respone){
             if(err){
                 console.log("Error");
@@ -610,6 +621,7 @@ app.post("/confirmbooking",function(req,res){
         });
     }
     else if(obj == 3){
+        se.email = req.body.emailid;
         thirdroom.insertMany([th],function(err,respone){
             if(err){
                 console.log("Error");
@@ -620,6 +632,7 @@ app.post("/confirmbooking",function(req,res){
         });
     }
     else if(obj == 4){
+        xy.email = req.body.emailid;
         fourthroom.insertMany([xy],function(err,respone){
             if(err){
                 console.log("Error");
@@ -630,6 +643,7 @@ app.post("/confirmbooking",function(req,res){
         });
     }
     else{
+        ab.email = req.body.emailid;
         fifthroom.insertMany([ab],function(err,respone){
             if(err){
                 console.log("Error");
@@ -640,6 +654,115 @@ app.post("/confirmbooking",function(req,res){
         });
     }
 });
+
+//cancel booking
+
+app.post("/cancel",function(req,res){
+    let num = req.body.number;
+    res.render("cancel",{val:num});
+});
+app.post("/cancelbooking",function(req,res){
+    if(req.body.index == 1){
+        firstroom.find({email:req.body.Email},function(err,records){
+            let flag = false;
+            records.forEach(function(item){
+                if(req.body.checkin === item.checkindate && req.body.checkout === item.checkoutdate &&flag===false){
+                    firstroom.deleteOne({checkindate:req.body.checkin,checkoutdate:req.body.checkout},function(err,result){
+                        if(err){
+                            console.log("Error");
+                        }
+                        else{
+                            console.log("Deleted");
+                        }
+                        flag = true;
+                        res.redirect("/erumdadam-the-treehouse");
+                    });
+                }
+            }); 
+        });
+        res.render("success",{result:"No record found"});
+    }
+    else if(req.body.index == 2){
+        secondroom.find({email:req.body.Email},function(err,records){
+            let flag = false;
+            records.forEach(function(item){
+                if(req.body.checkin === item.checkindate && req.body.checkout === item.checkoutdate &&flag===false){
+                    secondroom.deleteOne({checkindate:req.body.checkin,checkoutdate:req.body.checkout},function(err,result){
+                        if(err){
+                            console.log("Error");
+                        }
+                        else{
+                            console.log("Deleted");
+                        }
+                        flag = true;
+                        res.redirect("/le-tranquil");
+                    });
+                }
+            }); 
+        });
+        res.render("success",{result:"No record found"});
+    }
+    else if(req.body.index == 3){
+        thirdroom.find({email:req.body.Email},function(err,records){
+            let flag = false;
+            records.forEach(function(item){
+                if(req.body.checkin === item.checkindate && req.body.checkout === item.checkoutdate &&flag===false){
+                    thirdroom.deleteOne({checkindate:req.body.checkin,checkoutdate:req.body.checkout},function(err,result){
+                        if(err){
+                            console.log("Error");
+                        }
+                        else{
+                            console.log("Deleted");
+                        }
+                        flag = true;
+                        res.redirect("/quinta-da-santana-luxury-villa");
+                    });
+                }
+            }); 
+        });
+        res.render("success",{result:"No record found"});
+    }
+    else if(req.body.index == 4){
+        fourthroom.find({email:req.body.Email},function(err,records){
+            let flag = false;
+            records.forEach(function(item){
+                if(req.body.checkin === item.checkindate && req.body.checkout === item.checkoutdate &&flag===false){
+                    fourthroom.deleteOne({checkindate:req.body.checkin,checkoutdate:req.body.checkout},function(err,result){
+                        if(err){
+                            console.log("Error");
+                        }
+                        else{
+                            console.log("Deleted");
+                        }
+                        flag = true;
+                        res.redirect("/paddle-houseboats-1");
+                    });
+                }
+            }); 
+        });
+        res.render("success",{result:"No record found"});
+    }
+    else{
+        fifthroom.find({email:req.body.Email},function(err,records){
+            let flag = false;
+            records.forEach(function(item){
+                if(req.body.checkin === item.checkindate && req.body.checkout === item.checkoutdate &&flag===false){
+                    fifthroom.deleteOne({checkindate:req.body.checkin,checkoutdate:req.body.checkout},function(err,result){
+                        if(err){
+                            console.log("Error");
+                        }
+                        else{
+                            console.log("Deleted");
+                        }
+                        flag = true;
+                        res.redirect("/sunny-side-cottage-with-lake-view");
+                    });
+                }
+            }); 
+        });
+        res.render("success",{result:"No record found"});
+    }
+}); 
 app.listen(3000,function(){
     console.log("App listening on port 3000.");
 });

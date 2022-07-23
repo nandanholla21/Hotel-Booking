@@ -15,10 +15,11 @@
 <body>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-          <h4>Your Booking has been confirmed. Thank you for booking. Click the button below to
-            finish proceedings.
+          <h4>Your Booking has been confirmed. Thank you for booking. Enter the email-id associated
+            with the booking and click the button below to finish proceedings.
           </h4>
           <form method="POST" action="/confirmbooking">
+            <input type="email" placeholder="Enter email-id" name="emailid">
             <button id="butbut" type="submit" class="btn btn-primary" name="number" value="">Finish</button>
           </form>
           
